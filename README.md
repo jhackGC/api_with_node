@@ -82,7 +82,7 @@ In the UI we can see:
 
 There will probably be supporting models that we create to help with querying and other logic like authenticatio
 
-### Prisma Syntax
+### Prisma Syntax and models definition
 
 Prisma has an easy to understand syntax for creating models. Its based on the GraphQL language which is based on JSON. So you'll feel right at home.
 I highly recommend installing the Prisma VS Code plugin. It lints and cleans up your schema file.
@@ -194,3 +194,44 @@ model UpdatePoint {
 ```
 
 As we continue to build, we will most likely make changes to our schema to fit the experience we want to create.
+
+After your edits in the prisma file you can run
+
+```bash
+npx prisma format
+```
+
+to format it
+
+### Initial load to the DB
+
+#### Migrations
+
+Since this is our first time interacting with the DB, we need to run our initial migration to get the DB and our schema in sync.
+
+Only SQL DBs use migrations as a way to track and apply changes to the database schema over time. Migrations allow you to version your schema, update tables, add or remove columns, and keep your database structure in sync with your application code. Non-SQL databases (like NoSQL) typically do not use migrations in the same way, since their schemas are more flexible or schema-less.
+
+We'll continue to run migrations as we make schema changes to ensure the schema and any data in the DB stay in sync.
+
+Before we run a migration, we need to install the prisma client which is the SDK we'll use in our code to interact with the DB.
+
+This client is type-safe and based on of our schema. It's actually an NPM package that gets generated on demand to adjust to your schema! Pretty cool.
+
+```bash
+npm i @prisma/client --save
+```
+
+Next, lets migrate the DB. Make sure you added your DB connection string to the .env file as DATABASE_URL.
+
+You can find the connection string on Render. Be sure to use the external one.
+
+Now to run the migration:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+This will migrate the DB over to use our schema and then generate the new client for us.
+
+This client will be used in our code and is now type-checked against our schema.
+Awesome
